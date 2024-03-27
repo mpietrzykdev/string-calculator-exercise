@@ -61,4 +61,19 @@ class StringCalculatorTest {
         sa.assertAll();
     }
 
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenInvalidInput() {
+        //given
+        String inputForTest = "1,m";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Invalid input format.");
+        sa.assertAll();
+    }
+
 }

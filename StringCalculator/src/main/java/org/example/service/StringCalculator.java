@@ -14,7 +14,11 @@ public class StringCalculator {
 
         int sum = 0;
         for (String num : numbersArray) {
-            sum += Integer.parseInt(num);
+            try {
+                sum += Integer.parseInt(num);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid input format.");
+            }
         }
         return sum;
     }
