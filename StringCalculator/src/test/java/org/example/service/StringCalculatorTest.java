@@ -47,18 +47,16 @@ class StringCalculatorTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenAddMoreThanTwoNumbers() {
+    void shouldReturn10WhenAddMultipleNumbersFrom1To4SeparatedByComa() {
         //given
         String inputForTest = "1,2,3,4";
+        int expectedResult = 10;
 
         //when
-        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+        int result = StringCalculator.add(inputForTest);
 
         //then
-        SoftAssertions sa = new SoftAssertions();
-        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
-        sa.assertThat(e).hasMessage("Input can contain up to two numbers separated by commas.");
-        sa.assertAll();
+        assertEquals(expectedResult, result);
     }
 
     @Test
