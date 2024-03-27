@@ -74,4 +74,17 @@ class StringCalculatorTest {
         sa.assertAll();
     }
 
+    @Test
+    public void shouldReturn10WhenAddNumbersFrom1To4SeparatedByComaAndNewline() {
+        //given
+        String inputForTest = "1,2\n3,4";
+        int expectedResult = 10;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
 }
