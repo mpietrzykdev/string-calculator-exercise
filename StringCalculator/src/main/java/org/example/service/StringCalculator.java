@@ -1,5 +1,8 @@
 package org.example.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StringCalculator {
 
     public static int add(String numbers) {
@@ -36,6 +39,7 @@ public class StringCalculator {
         String delimiter = numbers.substring(2, delimiterIndex);
         String[] parts = numbers.substring(delimiterIndex + 1).split("\\Q" + delimiter + "\\E");
         int sum = 0;
+        List<Integer> negatives = new ArrayList<>();
         for (String part : parts) {
             char nonNumericChar = findNonNumericChar(part);
             if (nonNumericChar != 0) {
@@ -43,33 +47,67 @@ public class StringCalculator {
                         "‘ found at position " + numbers.substring(4).indexOf(nonNumericChar) + ".");
             }
             try {
-                sum += Integer.parseInt(part);
+                int num = Integer.parseInt(part);
+                if (num < 0) {
+                    negatives.add(num);
+                } else {
+                    sum += num;
+                }
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid input format.");
             }
+        }
+        if (!negatives.isEmpty()) {
+            handleNegativeNumbers(negatives);
         }
         return sum;
     }
 
     private static char findNonNumericChar(String str) {
+        boolean isFirstChar = true;
         for (char c : str.toCharArray()) {
+            if (isFirstChar && c == '-') {
+                isFirstChar = false;
+                continue;
+            }
             if (!Character.isDigit(c)) {
                 return c;
             }
+            isFirstChar = false;
         }
         return 0;
     }
 
     private static int sumNumbers(String[] numbersArray) {
         int sum = 0;
+        List<Integer> negatives = new ArrayList<>();
         for (String num : numbersArray) {
             try {
-                sum += Integer.parseInt(num);
+                int n = Integer.parseInt(num);
+                if (n < 0) {
+                    negatives.add(n);
+                } else {
+                    sum += n;
+                }
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Invalid input format.");
             }
         }
+        if (!negatives.isEmpty()) {
+            handleNegativeNumbers(negatives);
+        }
         return sum;
+    }
+
+    private static void handleNegativeNumbers(List<Integer> negatives) {
+        StringBuilder message = new StringBuilder("Negative number(s) not allowed: ");
+        for (int i = 0; i < negatives.size(); i++) {
+            if (i > 0) {
+                message.append(", ");
+            }
+            message.append(negatives.get(i));
+        }
+        throw new IllegalArgumentException(message.toString());
     }
 
 }

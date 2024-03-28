@@ -171,4 +171,49 @@ class StringCalculatorTest {
         sa.assertAll();
     }
 
+    @Test
+    void shouldThrowIllegalArgumentExceptionWithRightMessageWhenInputContainsNegativeNumber() {
+        //given
+        String inputForTest = "1,-2";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Negative number(s) not allowed: -2");
+        sa.assertAll();
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWithRightMessageWhenInputContainsMultipleNegativeNumbers() {
+        //given
+        String inputForTest = "2,-4,-9";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Negative number(s) not allowed: -4, -9");
+        sa.assertAll();
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWithRightMessageWhenInputWithCustomDelimiterContainsNegativeNumber() {
+        //given
+        String inputForTest = "//;\n3;-2";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Negative number(s) not allowed: -2");
+        sa.assertAll();
+    }
+
 }
