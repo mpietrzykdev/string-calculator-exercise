@@ -10,14 +10,20 @@ public class StringCalculator {
             return 0;
         }
 
+        List<String> errors = new ArrayList<>();
+
         checkLastCharacter(numbers);
 
+        int result;
         if (numbers.startsWith("//")) {
-            return sumWithCustomDelimiter(numbers);
+            result = sumWithCustomDelimiter(numbers, errors);
         } else {
-            String[] numbersArray = numbers.split("[,\n]");
-            return sumNumbers(numbersArray);
+            result = sumNumbers(numbers.split("[,\n]"), errors);
         }
+
+        handleErrors(errors);
+
+        return result;
     }
 
     private static boolean isEmpty(String input) {
@@ -31,34 +37,39 @@ public class StringCalculator {
         }
     }
 
-    private static int sumWithCustomDelimiter(String numbers) {
+    private static int sumWithCustomDelimiter(String numbers, List<String> errors) {
         int delimiterIndex = numbers.indexOf("\n");
         if (delimiterIndex == -1) {
             throw new IllegalArgumentException("Invalid input format");
         }
         String delimiter = numbers.substring(2, delimiterIndex);
         String[] parts = numbers.substring(delimiterIndex + 1).split("\\Q" + delimiter + "\\E");
+
         int sum = 0;
         List<Integer> negatives = new ArrayList<>();
+
         for (String part : parts) {
             char nonNumericChar = findNonNumericChar(part);
             if (nonNumericChar != 0) {
-                throw new IllegalArgumentException("‘" + delimiter + "‘ expected but ‘" + nonNumericChar +
+                String[] numbersWithCustomDelimiter = part.split(String.valueOf(nonNumericChar));
+                for (String num : numbersWithCustomDelimiter) {
+                    int n = Integer.parseInt(num);
+                    if (n < 0) {
+                        negatives.add(n);
+                        handleNegativeNumbers(negatives, errors);
+                    }
+                }
+                errors.add("‘" + delimiter + "‘ expected but ‘" + nonNumericChar +
                         "‘ found at position " + numbers.substring(4).indexOf(nonNumericChar) + ".");
-            }
-            try {
+            } else {
                 int num = Integer.parseInt(part);
                 if (num < 0) {
                     negatives.add(num);
+                    handleNegativeNumbers(negatives, errors);
                 } else {
                     sum += num;
                 }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid input format.");
             }
-        }
-        if (!negatives.isEmpty()) {
-            handleNegativeNumbers(negatives);
         }
         return sum;
     }
@@ -78,28 +89,24 @@ public class StringCalculator {
         return 0;
     }
 
-    private static int sumNumbers(String[] numbersArray) {
+    private static int sumNumbers(String[] numbersArray, List<String> errors) {
         int sum = 0;
         List<Integer> negatives = new ArrayList<>();
         for (String num : numbersArray) {
-            try {
-                int n = Integer.parseInt(num);
-                if (n < 0) {
-                    negatives.add(n);
-                } else {
-                    sum += n;
-                }
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid input format.");
+            int n = Integer.parseInt(num);
+            if (n < 0) {
+                negatives.add(n);
+            } else {
+                sum += n;
             }
         }
         if (!negatives.isEmpty()) {
-            handleNegativeNumbers(negatives);
+            handleNegativeNumbers(negatives, errors);
         }
         return sum;
     }
 
-    private static void handleNegativeNumbers(List<Integer> negatives) {
+    private static void handleNegativeNumbers(List<Integer> negatives, List<String> errors) {
         StringBuilder message = new StringBuilder("Negative number(s) not allowed: ");
         for (int i = 0; i < negatives.size(); i++) {
             if (i > 0) {
@@ -107,7 +114,13 @@ public class StringCalculator {
             }
             message.append(negatives.get(i));
         }
-        throw new IllegalArgumentException(message.toString());
+        errors.add(message.toString());
+    }
+
+    private static void handleErrors(List<String> errors) {
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join("\n", errors));
+        }
     }
 
 }

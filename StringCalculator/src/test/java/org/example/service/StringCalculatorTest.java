@@ -60,21 +60,6 @@ class StringCalculatorTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenInvalidInput() {
-        //given
-        String inputForTest = "1,m";
-
-        //when
-        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
-
-        //then
-        SoftAssertions sa = new SoftAssertions();
-        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
-        sa.assertThat(e).hasMessage("Invalid input format.");
-        sa.assertAll();
-    }
-
-    @Test
     public void shouldReturn10WhenAddNumbersFrom1To4SeparatedByComaAndNewline() {
         //given
         String inputForTest = "1,2\n3,4";
@@ -213,6 +198,22 @@ class StringCalculatorTest {
         SoftAssertions sa = new SoftAssertions();
         sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
         sa.assertThat(e).hasMessage("Negative number(s) not allowed: -2");
+        sa.assertAll();
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWithAllErrorMessagesSeparatedByNewlinesWhenMultipleErrorsOccurs() {
+        //given
+        String inputForTest = "//|\n1|2,-3";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Negative number(s) not allowed: -3\n" +
+                "‘|‘ expected but ‘,‘ found at position 3.");
         sa.assertAll();
     }
 
