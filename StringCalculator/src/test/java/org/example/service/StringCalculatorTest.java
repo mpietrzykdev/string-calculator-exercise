@@ -117,4 +117,58 @@ class StringCalculatorTest {
         sa.assertAll();
     }
 
+    @Test
+    void shouldReturn8WhenAddTwoNumbersEqualTo3And5WithCustomDelimiter() {
+        //given
+        String inputForTest = "//;\n3;5";
+        int expectedResult = 8;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void shouldReturn10WhenAddNumbersFrom1To4WithCustomDelimiter() {
+        //given
+        String inputForTest = "//|\n1|2|3|4";
+        int expectedResult = 10;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void shouldReturn10WhenAddNumbersFrom1To4WithLiteralCustomDelimiter() {
+        //given
+        String inputForTest = "//sep\n1sep2sep3sep4";
+        int expectedResult = 10;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenVariousCustomDelimiters() {
+        //given
+        String inputForTest = "//|\n1|2,3";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("‘|‘ expected but ‘,‘ found at position 3.");
+        sa.assertAll();
+    }
+
 }
