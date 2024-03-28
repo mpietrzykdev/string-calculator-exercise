@@ -87,4 +87,34 @@ class StringCalculatorTest {
         assertEquals(expectedResult, result);
     }
 
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenComaAtTheEnd() {
+        //given
+        String inputForTest = "1,2,";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Input cannot end with a separator.");
+        sa.assertAll();
+    }
+
+    @Test
+    void shouldThrowIllegalArgumentExceptionWhenNewlineAtTheEnd() {
+        //given
+        String inputForTest = "1,2\n";
+
+        //when
+        Exception e = assertThrows(IllegalArgumentException.class, () -> StringCalculator.add(inputForTest));
+
+        //then
+        SoftAssertions sa = new SoftAssertions();
+        sa.assertThat(e).isExactlyInstanceOf(IllegalArgumentException.class);
+        sa.assertThat(e).hasMessage("Input cannot end with a separator.");
+        sa.assertAll();
+    }
+
 }

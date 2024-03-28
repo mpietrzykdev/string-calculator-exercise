@@ -7,6 +7,11 @@ public class StringCalculator {
             return 0;
         }
 
+        char lastChar = numbers.charAt(numbers.length() - 1);
+        if (lastChar == ',' || lastChar == '\n') {
+            throw new IllegalArgumentException("Input cannot end with a separator.");
+        }
+
         String[] numbersArray = numbers.split("[,\n]");
         int sum = 0;
         for (String num : numbersArray) {
