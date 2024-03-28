@@ -66,7 +66,7 @@ public class StringCalculator {
                 if (num < 0) {
                     negatives.add(num);
                     handleNegativeNumbers(negatives, errors);
-                } else {
+                } else if (num <= 1000) {
                     sum += num;
                 }
             }
@@ -96,7 +96,7 @@ public class StringCalculator {
             int n = Integer.parseInt(num);
             if (n < 0) {
                 negatives.add(n);
-            } else {
+            } else if (n <= 1000) {
                 sum += n;
             }
         }

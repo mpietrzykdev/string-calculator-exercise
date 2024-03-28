@@ -217,4 +217,30 @@ class StringCalculatorTest {
         sa.assertAll();
     }
 
+    @Test
+    void shouldIgnoreNumberGreaterThan1000AndReturn3WhenAddTwoNumbers() {
+        //given
+        String inputForTest = "3,1005";
+        int expectedResult = 3;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void shouldIgnoreNumberGreaterThan1000AndReturn6WhenAddNumbersWithCustomDelimiter() {
+        //given
+        String inputForTest = "//|\n1|2|3|1004";
+        int expectedResult = 6;
+
+        //when
+        int result = StringCalculator.add(inputForTest);
+
+        //then
+        assertEquals(expectedResult, result);
+    }
+
 }
